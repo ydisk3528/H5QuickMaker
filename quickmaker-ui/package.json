@@ -10,7 +10,8 @@
     "dev:electron:run": "wait-on dist-electron/main.js http://localhost:5173 && nodemon --watch dist-electron --ext js --exec \"electron dist-electron/main.js --dev\"",
     "build": "npm run build:web && npm run build:electron",
     "build:web": "vite build",
-    "build:electron": "tsc -p electron/tsconfig.json"
+    "build:electron": "tsc -p electron/tsconfig.json",
+    "dist:win": "npm run build && electron-builder --win nsis portable --x64"
   },
   "dependencies": {
     "element-plus": "^2.13.2",
@@ -21,9 +22,47 @@
     "@vitejs/plugin-vue": "^5.2.1",
     "concurrently": "^9.1.2",
     "electron": "^35.0.1",
+    "electron-builder": "^26.0.12",
     "nodemon": "^3.1.9",
     "typescript": "^5.8.2",
     "vite": "^6.2.0",
     "wait-on": "^8.0.2"
+  },
+  "build": {
+    "appId": "com.h5quickmaker.app",
+    "productName": "H5 Quick Maker",
+    "directories": {
+      "output": "release"
+    },
+    "asar": true,
+    "files": [
+      "dist/**",
+      "dist-electron/**",
+      "package.json"
+    ],
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "portable",
+          "arch": [
+            "x64"
+          ]
+        }
+      ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "artifactName": "${productName}-Setup-${version}.${ext}"
+    },
+    "portable": {
+      "artifactName": "${productName}-Portable-${version}.${ext}"
+    }
   }
 }

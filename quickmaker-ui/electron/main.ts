@@ -1,6 +1,7 @@
 import { Notification, app, BrowserWindow, Menu, dialog, ipcMain, shell } from 'electron';
 import path from 'node:path';
 import { spawn, type ChildProcessWithoutNullStreams } from 'node:child_process';
+import { promises as fs } from 'node:fs';
 import {
   buildProjectArtifact,
   createProject,
@@ -134,16 +135,48 @@ ipcMain.handle('build-artifact', async (event, projectPath: string, kind: BuildK
     event.sender.send('build-progress', progress);
   });
   const projectName = path.basename(projectPath);
+  let finalArtifactPath = result.artifactPath;
   if (kind === 'apk') {
     shell.showItemInFolder(result.artifactPath);
+  }
+  if (kind === 'aab') {
+    const focusedWindow = BrowserWindow.getFocusedWindow() ?? BrowserWindow.getAllWindows()[0];
+    let defaultDir = path.join('E:\\pic', projectName);
+    try {
+      await fs.mkdir(defaultDir, { recursive: true });
+    } catch {
+      defaultDir = 'E:\\pic';
+    }
+
+    const picked = focusedWindow
+      ? await dialog.showOpenDialog(focusedWindow, {
+          title: '请选择aab的存放目录',
+          defaultPath: defaultDir,
+          properties: ['openDirectory', 'createDirectory', 'promptToCreate']
+        })
+      : await dialog.showOpenDialog({
+          title: '请选择aab的存放目录',
+          defaultPath: defaultDir,
+          properties: ['openDirectory', 'createDirectory', 'promptToCreate']
+        });
+
+    if (!picked.canceled && picked.filePaths.length > 0) {
+      const targetDir = picked.filePaths[0];
+      const copiedPath = path.join(targetDir, path.basename(result.artifactPath));
+      await fs.copyFile(result.artifactPath, copiedPath);
+      finalArtifactPath = copiedPath;
+      shell.showItemInFolder(copiedPath);
+    } else {
+      shell.showItemInFolder(result.artifactPath);
+    }
   }
   if (Notification.isSupported()) {
     new Notification({
       title: 'H5 Quick Maker',
-      body: `${projectName}\n${result.artifactPath}`
+      body: `${projectName}\n${finalArtifactPath}`
     }).show();
   }
-  return result;
+  return { ...result, artifactPath: finalArtifactPath };
 });
 
 ipcMain.handle(

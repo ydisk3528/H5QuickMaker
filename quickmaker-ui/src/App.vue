@@ -7,6 +7,7 @@ import {
   ref,
   watch,
 } from "vue";
+import { ElNotification } from "element-plus";
 
 type ProjectRecord = {
   createdAt: string;
@@ -110,6 +111,14 @@ const recordsRaw = ref("[]");
 const recordsStatus = ref("");
 const backendStatus = ref("");
 type BackendField = { key: string; value: string };
+type ChangeCategory = "工程配置" | "后台配置" | "adjParams" | "操作";
+type ChangeLogItem = {
+  at: string;
+  category: ChangeCategory;
+  field: string;
+  before: string;
+  after: string;
+};
 const backendFields = ref<BackendField[]>([]);
 const adjParamsFields = ref<BackendField[]>([]);
 const adjParamsRaw = ref("{}");
@@ -131,12 +140,109 @@ const iconDirCheck = ref<{ ok: boolean; message: string }>({
   message: "",
 });
 const showRecordPanel = ref(false);
+const changeLogs = ref<ChangeLogItem[]>([]);
+const changeFilterCategory = ref<"全部" | ChangeCategory>("全部");
+const changeKeyword = ref("");
+const changeTrackingEnabled = ref(false);
 
 let unsubProject: (() => void) | null = null;
 let unsubBuild: (() => void) | null = null;
 let unsubAdb: (() => void) | null = null;
 let unsubLogcat: (() => void) | null = null;
 let duplicateTimer: number | null = null;
+
+function notifySuccess(title: string, message: string): void {
+  ElNotification({
+    title,
+    message,
+    type: "success",
+    duration: 2600,
+    position: "top-right",
+  });
+}
+
+function notifyInfo(title: string, message: string): void {
+  ElNotification({
+    title,
+    message,
+    type: "info",
+    duration: 2200,
+    position: "top-right",
+  });
+}
+
+function notifyError(title: string, message: string): void {
+  ElNotification({
+    title,
+    message,
+    type: "error",
+    duration: 3600,
+    position: "top-right",
+  });
+}
+
+function toText(value: unknown): string {
+  if (typeof value === "string") return value;
+  if (value === null || value === undefined) return "";
+  if (typeof value === "number" || typeof value === "boolean") {
+    return String(value);
+  }
+  try {
+    return JSON.stringify(value);
+  } catch {
+    return String(value);
+  }
+}
+
+function pushChange(
+  category: ChangeCategory,
+  field: string,
+  before: unknown,
+  after: unknown
+): void {
+  if (!changeTrackingEnabled.value) return;
+  const beforeText = toText(before);
+  const afterText = toText(after);
+  if (beforeText === afterText) return;
+  changeLogs.value = [
+    {
+      at: new Date().toISOString(),
+      category,
+      field,
+      before: beforeText,
+      after: afterText,
+    },
+    ...changeLogs.value,
+  ].slice(0, 1200);
+}
+
+function objectDiff(
+  category: ChangeCategory,
+  prefix: string,
+  prevObj: Record<string, unknown>,
+  nextObj: Record<string, unknown>
+): void {
+  const keys = new Set([...Object.keys(prevObj), ...Object.keys(nextObj)]);
+  keys.forEach((k) => {
+    const before = prevObj[k];
+    const after = nextObj[k];
+    if (toText(before) !== toText(after)) {
+      pushChange(category, `${prefix}${k}`, before, after);
+    }
+  });
+}
+
+function backendMap(): Record<string, string> {
+  return Object.fromEntries(
+    backendFields.value.map((x) => [x.key, String(x.value ?? "")])
+  );
+}
+
+function adjFieldsMap(): Record<string, string> {
+  return Object.fromEntries(
+    adjParamsFields.value.map((x) => [x.key, String(x.value ?? "")])
+  );
+}
 
 const parsedRecords = computed<ProjectRecord[]>(() => {
   try {
@@ -217,10 +323,27 @@ const filteredLogcatLines = computed(() => {
   });
 });
 
+const filteredChangeLogs = computed(() => {
+  const keyword = changeKeyword.value.trim().toLowerCase();
+  return changeLogs.value.filter((item) => {
+    if (
+      changeFilterCategory.value !== "全部" &&
+      item.category !== changeFilterCategory.value
+    ) {
+      return false;
+    }
+    if (!keyword) return true;
+    return `${item.field} ${item.before} ${item.after}`
+      .toLowerCase()
+      .includes(keyword);
+  });
+});
+
 function ensureApi(): boolean {
   if (!window.quickMaker) {
     error.value =
       "quickMaker API 未注入。请重启 npm run dev 并使用 Electron 窗口。";
+    notifyError("API 未注入", error.value);
     return false;
   }
   return true;
@@ -685,8 +808,10 @@ async function loadBackendConfig(): Promise<void> {
     if (form.applicationId.trim())
       setBackendValue(packageNameKey(), form.applicationId.trim());
     backendStatus.value = `已读取: ${new Date().toISOString()}`;
+    notifySuccess("后台配置", "已读取 houtai.json");
   } catch (e) {
     backendStatus.value = e instanceof Error ? e.message : String(e);
+    notifyError("后台配置读取失败", backendStatus.value);
   }
 }
 
@@ -708,9 +833,11 @@ function copyContentPassword(): void {
     .writeText(pass)
     .then(() => {
       backendStatus.value = "content_password 已复制";
+      notifySuccess("复制成功", "content_password 已复制到剪贴板");
     })
     .catch(() => {
       backendStatus.value = "复制失败，请手动复制";
+      notifyError("复制失败", backendStatus.value);
     });
 }
 
@@ -751,9 +878,11 @@ function copyBackendConfig(): void {
     .writeText(raw)
     .then(() => {
       backendStatus.value = "后台 JSON 已复制";
+      notifySuccess("复制成功", "后台 JSON 已复制到剪贴板");
     })
     .catch(() => {
       backendStatus.value = "复制失败，请手动复制";
+      notifyError("复制失败", backendStatus.value);
     });
 }
 
@@ -794,9 +923,11 @@ function copyBackendConfigMinified(): void {
     .writeText(raw)
     .then(() => {
       backendStatus.value = "后台压缩JSON已复制";
+      notifySuccess("复制成功", "后台压缩 JSON 已复制到剪贴板");
     })
     .catch(() => {
       backendStatus.value = "复制失败，请手动复制";
+      notifyError("复制失败", backendStatus.value);
     });
 }
 
@@ -815,6 +946,7 @@ async function submit(): Promise<void> {
   if (!gameDirCheck.value.ok || !iconDirCheck.value.ok) {
     error.value = "目录校验失败，请修正后再创建。";
     addMajorLog(`[${new Date().toISOString()}] 目录校验失败`);
+    notifyError("创建失败", error.value);
     return;
   }
 
@@ -822,6 +954,8 @@ async function submit(): Promise<void> {
   addMajorLog(`[${new Date().toISOString()}] 开始创建工程`);
   addMajorLog(`applicationId=${form.applicationId}`);
   addMajorLog(`projectName=${form.projectName}`);
+  pushChange("操作", "创建工程", "", `${form.projectName} (${form.applicationId})`);
+  notifyInfo("开始创建工程", form.projectName || "未命名工程");
 
   try {
     initBackendDefaults();
@@ -853,6 +987,8 @@ async function submit(): Promise<void> {
     progress.value = 100;
 
     addMajorLog(`[${new Date().toISOString()}] 创建工程完成`);
+    notifySuccess("创建完成", form.projectName);
+    pushChange("操作", "创建工程结果", "进行中", "完成");
     message.value = [
       `工程目录: ${result.destinationProjectPath}`,
       `命名空间: ${result.namespace}`,
@@ -869,6 +1005,8 @@ async function submit(): Promise<void> {
   } catch (e) {
     error.value = e instanceof Error ? e.message : String(e);
     addMajorLog(`[${new Date().toISOString()}] 创建工程失败: ${error.value}`);
+    notifyError("创建失败", error.value);
+    pushChange("操作", "创建工程结果", "进行中", `失败: ${error.value}`);
   } finally {
     busy.value = false;
   }
@@ -882,6 +1020,8 @@ async function buildArtifact(kind: "apk" | "aab"): Promise<void> {
   addMajorLog(
     `[${new Date().toISOString()}] 编译 ${kind.toUpperCase()} 开始 (release)`
   );
+  notifyInfo(`开始编译 ${kind.toUpperCase()}`, form.projectName || "当前工程");
+  pushChange("操作", "编译任务", "", `开始 ${kind.toUpperCase()}`);
 
   try {
     const result = await window.quickMaker.buildArtifact(
@@ -894,6 +1034,8 @@ async function buildArtifact(kind: "apk" | "aab"): Promise<void> {
     addMajorLog(
       `[${new Date().toISOString()}] 编译 ${kind.toUpperCase()} 完成`
     );
+    notifySuccess(`编译${kind.toUpperCase()}完成`, form.projectName || "当前工程");
+    pushChange("操作", "编译任务", `开始 ${kind.toUpperCase()}`, `完成 ${kind.toUpperCase()}`);
     message.value = `${kind.toUpperCase()} 编译完成:\n${result.artifactPath}`;
   } catch (e) {
     error.value = e instanceof Error ? e.message : String(e);
@@ -902,6 +1044,8 @@ async function buildArtifact(kind: "apk" | "aab"): Promise<void> {
         error.value
       }`
     );
+    notifyError(`编译${kind.toUpperCase()}失败`, error.value);
+    pushChange("操作", "编译任务", `开始 ${kind.toUpperCase()}`, `失败 ${kind.toUpperCase()}: ${error.value}`);
   } finally {
     buildBusy.value = false;
   }
@@ -913,6 +1057,8 @@ async function installCurrentApk(): Promise<void> {
 
   installBusy.value = true;
   addMajorLog(`[${new Date().toISOString()}] 开始 ADB 安装`);
+  notifyInfo("开始运行 APK", "正在通过 ADB 安装并启动");
+  pushChange("操作", "运行APK", "", "开始 ADB 安装");
 
   try {
     await window.quickMaker.installApk(lastBuiltApkPath.value, {
@@ -923,10 +1069,14 @@ async function installCurrentApk(): Promise<void> {
       await startLogcat(true);
     }
     addMajorLog(`[${new Date().toISOString()}] ADB 安装完成`);
+    notifySuccess("ADB 安装完成", form.projectName || "当前工程");
+    pushChange("操作", "运行APK", "开始 ADB 安装", "安装完成");
     message.value = `ADB 安装完成:\n${lastBuiltApkPath.value}`;
   } catch (e) {
     error.value = e instanceof Error ? e.message : String(e);
     addMajorLog(`[${new Date().toISOString()}] ADB 安装失败: ${error.value}`);
+    notifyError("ADB 安装失败", error.value);
+    pushChange("操作", "运行APK", "开始 ADB 安装", `失败: ${error.value}`);
   } finally {
     installBusy.value = false;
   }
@@ -939,8 +1089,10 @@ async function startLogcat(clear = false): Promise<void> {
     await window.quickMaker.startLogcat({ clear });
     logcatRunning.value = true;
     addMajorLog(`[${new Date().toISOString()}] LOG监控已启动`);
+    notifyInfo("运行日志", "LOG 监控已启动");
   } catch (e) {
     error.value = e instanceof Error ? e.message : String(e);
+    notifyError("LOG 启动失败", error.value);
   }
 }
 
@@ -951,6 +1103,7 @@ async function stopLogcat(): Promise<void> {
   } finally {
     logcatRunning.value = false;
     addMajorLog(`[${new Date().toISOString()}] LOG监控已停止`);
+    notifyInfo("运行日志", "LOG 监控已停止");
   }
 }
 
@@ -978,6 +1131,64 @@ watch(
   (next) => {
     if (next.trim()) {
       setBackendValue(packageNameKey(), next.trim());
+    }
+  }
+);
+
+watch(
+  () => JSON.stringify(form),
+  (nextRaw, prevRaw) => {
+    if (!changeTrackingEnabled.value) return;
+    let prevObj: Record<string, unknown> = {};
+    let nextObj: Record<string, unknown> = {};
+    try {
+      prevObj = prevRaw ? (JSON.parse(prevRaw) as Record<string, unknown>) : {};
+      nextObj = nextRaw ? (JSON.parse(nextRaw) as Record<string, unknown>) : {};
+    } catch {
+      return;
+    }
+    objectDiff("工程配置", "", prevObj, nextObj);
+  }
+);
+
+watch(
+  () => JSON.stringify(backendMap()),
+  (nextRaw, prevRaw) => {
+    if (!changeTrackingEnabled.value) return;
+    let prevObj: Record<string, unknown> = {};
+    let nextObj: Record<string, unknown> = {};
+    try {
+      prevObj = prevRaw ? (JSON.parse(prevRaw) as Record<string, unknown>) : {};
+      nextObj = nextRaw ? (JSON.parse(nextRaw) as Record<string, unknown>) : {};
+    } catch {
+      return;
+    }
+    objectDiff("后台配置", "", prevObj, nextObj);
+  }
+);
+
+watch(
+  () => JSON.stringify(adjFieldsMap()),
+  (nextRaw, prevRaw) => {
+    if (!changeTrackingEnabled.value) return;
+    let prevObj: Record<string, unknown> = {};
+    let nextObj: Record<string, unknown> = {};
+    try {
+      prevObj = prevRaw ? (JSON.parse(prevRaw) as Record<string, unknown>) : {};
+      nextObj = nextRaw ? (JSON.parse(nextRaw) as Record<string, unknown>) : {};
+    } catch {
+      return;
+    }
+    objectDiff("adjParams", "adjParams.", prevObj, nextObj);
+  }
+);
+
+watch(
+  () => adjParamsRaw.value,
+  (next, prev) => {
+    if (!changeTrackingEnabled.value) return;
+    if (next !== prev) {
+      pushChange("adjParams", "adjParams原始文本", prev, next);
     }
   }
 );
@@ -1016,6 +1227,7 @@ onMounted(() => {
   }
 
   if (!form.projectName) refreshProjectName();
+  changeTrackingEnabled.value = true;
 });
 
 onBeforeUnmount(() => {
@@ -1365,6 +1577,52 @@ onBeforeUnmount(() => {
           </div>
           <div class="record-status" v-if="backendStatus">
             {{ backendStatus }}
+          </div>
+        </el-tab-pane>
+
+        <el-tab-pane label="修改记录" name="changes">
+          <div class="record-actions">
+            <el-select
+              v-model="changeFilterCategory"
+              style="width: 220px"
+              placeholder="选择分类"
+            >
+              <el-option label="全部" value="全部" />
+              <el-option label="工程配置" value="工程配置" />
+              <el-option label="后台配置" value="后台配置" />
+              <el-option label="adjParams" value="adjParams" />
+              <el-option label="操作" value="操作" />
+            </el-select>
+            <el-input
+              v-model="changeKeyword"
+              clearable
+              placeholder="搜索字段或内容"
+            />
+            <el-button @click="changeLogs = []">清空记录</el-button>
+          </div>
+
+          <div class="record-status">
+            当前内存记录数: {{ changeLogs.length }}（仅本次运行有效）
+          </div>
+
+          <div class="log-panel">
+            <div class="log-title">修改明细</div>
+            <div class="log-body">
+              <div
+                v-for="(item, idx) in filteredChangeLogs"
+                :key="`chg-${idx}-${item.at}`"
+                class="change-row"
+              >
+                <div class="change-head">
+                  [{{ item.at }}] [{{ item.category }}] {{ item.field }}
+                </div>
+                <div class="change-body">旧值: {{ item.before || "（空）" }}</div>
+                <div class="change-body">新值: {{ item.after || "（空）" }}</div>
+              </div>
+              <div v-if="filteredChangeLogs.length === 0" class="record-status">
+                暂无记录
+              </div>
+            </div>
           </div>
         </el-tab-pane>
       </el-tabs>

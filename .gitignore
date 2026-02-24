@@ -141,3 +141,4 @@ vite.config.ts.timestamp-*
 
 # Local temporary generated projects
 tempproject/
+quickmaker-ui/release/
