@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="UnityThemeSelector" parent="BaseUnityTheme">
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowTranslucentStatus">false</item>
+    </style>
+    <style name="BaseUnityTheme" parent="@style/Theme.AppCompat.NoActionBar">
+        <!-- 设置状态栏和标题栏颜色为黑色 -->
+        <item name="android:windowActionBar">true</item>
+        <item name="android:windowFullscreen">false</item>
+        <item name="android:windowActionBarOverlay">false</item>
+        <item name="android:textColorPrimary">#FFFFFF</item>
+    </style>
+    <style name="UnityThemeSelector.Translucent" parent="@style/UnityThemeSelector">
+        <item name="android:windowIsTranslucent">false</item>
+    </style>
+    <style name="LaunchTheme" parent="@android:style/Theme.Light.NoTitleBar">
+        <item name="android:windowFullscreen">false</item>
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+    </style>
+
+</resources>

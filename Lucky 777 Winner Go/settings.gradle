@@ -1,0 +1,56 @@
+pluginManagement {
+    repositories {
+        String storageUrl = System.env.FLUTTER_STORAGE_BASE_URL ?: "https://storage.googleapis.com"
+
+        maven { url 'https://maven.aliyun.com/repository/gradle-plugin' }
+        maven { url 'https://maven.aliyun.com/repository/google' }
+        maven { url "https://maven.aliyun.com/repository/public" }
+        maven { url "https://maven.aliyun.com/repository/central" }
+        maven {
+            url "https://jfrog.anythinktech.com/artifactory/overseas_sdk"
+        }
+        maven { url 'https://repo1.maven.org/maven2/' }
+        google()
+        mavenCentral()
+        gradlePluginPortal()
+        // 只取 AAR，本质绕开 .module/POM
+        maven {
+            url = uri("https://jitpack.io")
+            metadataSources {
+                artifact()
+                ignoreGradleMetadataRedirection()
+            }
+        }
+    }
+}
+
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        flatDir {
+            dirs 'app/libs'
+        }
+
+        maven {
+            url "https://jfrog.anythinktech.com/artifactory/overseas_sdk"
+        }
+        maven {
+            url "https://android-sdk.is.com/"
+        }
+        maven{ url"https://storage.googleapis.com/download.flutter.io"}
+        google()
+        mavenCentral()
+        // 只取 AAR，本质绕开 .module/POM
+        maven {
+            url = uri("https://jitpack.io")
+            metadataSources {
+                artifact()
+                ignoreGradleMetadataRedirection()
+            }
+        }
+        maven { url 'https://repo1.maven.org/maven2/' }
+    }
+}
+
+rootProject.name = "Lucky 777 Winner Go"
+include ':app'

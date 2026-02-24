@@ -1,0 +1,223 @@
+[
+  {
+    "createdAt": "2026-02-24T15:13:56.593Z",
+    "finishedAt": "2026-02-24T15:14:27.700Z",
+    "payload": {
+      "templatePath": "E:\\wg\\cocos\\H5QuickMaker\\Lucky 777 Winner Go",
+      "outputRoot": "E:\\wg\\cocos\\duZong",
+      "namespaceFilePath": "E:\\wg\\cocos\\H5QuickMaker\\namespace.txt",
+      "applicationId": "com.i9q5k79jgzkq.game",
+      "projectName": "Lucky 777 Glory Epic",
+      "gamePackagePath": "E:\\wg\\cocos\\H5QuickMaker\\quickmaker-ui\\game",
+      "iconResPath": "E:\\wg\\cocos\\H5QuickMaker\\quickmaker-ui\\res",
+      "contentPassword": "KstRLQxMogjM2yWl",
+      "backendConfig": {
+        "imgs": "yJtoYLNYMIuuaIpe",
+        "inwebview": "1",
+        "adsLan": "cn",
+        "adsCountry": "cn",
+        "adsRan": "0",
+        "log": "0",
+        "copyTxt": "0",
+        "e_lan": "",
+        "e_country": "",
+        "vpn": "0",
+        "sim": "1",
+        "levelPlayAppKey": "",
+        "levelPlayInterstitialId": "",
+        "while_list": "",
+        "black_list": "",
+        "type": "0",
+        "event_type": "-1",
+        "event_key": "6jukvs7m6lfk",
+        "open": "",
+        "more": "-1",
+        "orientation": "",
+        "fb_id": "",
+        "fb_token": "",
+        "content_password": "KstRLQxMogjM2yWl",
+        "applicationId": "com.i9q5k79jgzkq.game",
+        "link": "https://www.earnphp1o.vip/m/index.html?affiliateCode=vip339"
+      },
+      "backendAdjParams": {
+        "deposit": "wfbe92",
+        "depositSubmit": "z6jgds",
+        "firstDeposit": "7kqp28",
+        "firstDepositArrival": "9e82t6",
+        "firstOpen": "fezrp4",
+        "login": "fd52q8",
+        "redeposit": "hea9ja",
+        "register": "m14ntk",
+        "registerSubmit": "hmleca",
+        "withdraw": "nc3ncx"
+      }
+    },
+    "result": {
+      "destinationProjectPath": "E:\\wg\\cocos\\duZong\\Lucky 777 Glory Epic",
+      "namespace": "com.kxsoa.kisaxqsx",
+      "keystorePath": "E:\\wg\\cocos\\duZong\\Lucky 777 Glory Epic\\com.i9q5k79jgzkq.game.jks",
+      "backupGamePackagePath": "E:\\wg\\cocos\\H5QuickMaker\\quickmaker-ui\\tempproject\\Lucky 777 Glory Epic\\mygame",
+      "contentPassword": "KstRLQxMogjM2yWl"
+    }
+  },
+  {
+    "createdAt": "2026-02-24T11:53:18.112Z",
+    "finishedAt": "2026-02-24T11:53:22.344Z",
+    "logs": [
+      "[2026-02-24T11:53:18.112Z] Validating inputs",
+      "[2026-02-24T11:53:18.113Z] Parameters: applicationId=com.pqsk0aapnbig.game",
+      "[2026-02-24T11:53:18.113Z] Parameters: projectName=Lucky 777 Lucky Master",
+      "[2026-02-24T11:53:18.113Z] Parameters: gamePackagePath=E:\\apkaes\\aesApk\\minigame",
+      "[2026-02-24T11:53:18.113Z] Parameters: iconResPath=E:\\wg\\cocos\\H5QuickMaker\\quickmaker-ui\\res",
+      "[2026-02-24T11:53:18.113Z] Reading namespace",
+      "[2026-02-24T11:53:18.113Z] Destination exists, deleting for overwrite: E:\\wg\\cocos\\duZong\\Lucky 777 Lucky Master",
+      "[2026-02-24T11:53:18.509Z] Copying template project",
+      "[2026-02-24T11:53:20.587Z] Generating keystore",
+      "[2026-02-24T11:53:21.515Z] Updating build.gradle",
+      "[2026-02-24T11:53:21.520Z] Adjusting Java package path",
+      "[2026-02-24T11:53:21.520Z] Java package path unchanged, skip move",
+      "[2026-02-24T11:53:21.520Z] Rewriting namespace references",
+      "[2026-02-24T11:53:21.667Z] Updating project display names",
+      "[2026-02-24T11:53:21.675Z] Copying game package to project assets/mygame",
+      "[2026-02-24T11:53:21.986Z] Replacing icon resources under app/src/main/res",
+      "[2026-02-24T11:53:22.042Z] Icon resource merged from: E:\\wg\\cocos\\H5QuickMaker\\quickmaker-ui\\res",
+      "[2026-02-24T11:53:22.043Z] logo.png overwritten from: E:\\wg\\cocos\\H5QuickMaker\\quickmaker-ui\\res\\playstore-icon.png",
+      "[2026-02-24T11:53:22.043Z] Backing up game package under quickmaker-ui",
+      "[2026-02-24T11:53:22.344Z] Writing creation record"
+    ],
+    "payload": {
+      "templatePath": "E:\\wg\\cocos\\H5QuickMaker\\Lucky 777 Winner Go",
+      "outputRoot": "E:\\wg\\cocos\\duZong",
+      "namespaceFilePath": "E:\\wg\\cocos\\H5QuickMaker\\namespace.txt",
+      "applicationId": "com.pqsk0aapnbig.game",
+      "projectName": "Lucky 777 Lucky Master",
+      "gamePackagePath": "E:\\apkaes\\aesApk\\minigame",
+      "iconResPath": "E:\\wg\\cocos\\H5QuickMaker\\quickmaker-ui\\res"
+    },
+    "result": {
+      "destinationProjectPath": "E:\\wg\\cocos\\duZong\\Lucky 777 Lucky Master",
+      "namespace": "com.kxsoa.kisaxqsx",
+      "keystorePath": "E:\\wg\\cocos\\duZong\\Lucky 777 Lucky Master\\com.pqsk0aapnbig.game.jks",
+      "backupGamePackagePath": "E:\\wg\\cocos\\H5QuickMaker\\quickmaker-ui\\tempproject\\Lucky 777 Lucky Master\\mygame"
+    }
+  },
+  {
+    "createdAt": "2026-02-24T11:49:17.517Z",
+    "finishedAt": "2026-02-24T11:49:21.384Z",
+    "logs": [
+      "[2026-02-24T11:49:17.517Z] Validating inputs",
+      "[2026-02-24T11:49:17.519Z] Parameters: applicationId=com.pqsk0aapnbig.game",
+      "[2026-02-24T11:49:17.519Z] Parameters: projectName=Lucky 777 Lucky Master",
+      "[2026-02-24T11:49:17.519Z] Parameters: gamePackagePath=E:\\apkaes\\aesApk\\minigame",
+      "[2026-02-24T11:49:17.519Z] Parameters: iconResPath=E:\\wg\\cocos\\H5QuickMaker\\quickmaker-ui\\res",
+      "[2026-02-24T11:49:17.519Z] Reading namespace",
+      "[2026-02-24T11:49:17.519Z] Copying template project",
+      "[2026-02-24T11:49:19.897Z] Generating keystore",
+      "[2026-02-24T11:49:20.595Z] Updating build.gradle",
+      "[2026-02-24T11:49:20.598Z] Adjusting Java package path",
+      "[2026-02-24T11:49:20.599Z] Java package path unchanged, skip move",
+      "[2026-02-24T11:49:20.599Z] Rewriting namespace references",
+      "[2026-02-24T11:49:20.748Z] Updating project display names",
+      "[2026-02-24T11:49:20.755Z] Copying game package to project assets/mygame",
+      "[2026-02-24T11:49:21.058Z] Replacing icon resources under app/src/main/res",
+      "[2026-02-24T11:49:21.115Z] Icon resource merged from: E:\\wg\\cocos\\H5QuickMaker\\quickmaker-ui\\res",
+      "[2026-02-24T11:49:21.115Z] logo.png overwritten from: E:\\wg\\cocos\\H5QuickMaker\\quickmaker-ui\\res\\playstore-icon.png",
+      "[2026-02-24T11:49:21.115Z] Backing up game package under quickmaker-ui",
+      "[2026-02-24T11:49:21.384Z] Writing creation record"
+    ],
+    "payload": {
+      "templatePath": "E:\\wg\\cocos\\H5QuickMaker\\Lucky 777 Winner Go",
+      "outputRoot": "E:\\wg\\cocos\\duZong",
+      "namespaceFilePath": "E:\\wg\\cocos\\H5QuickMaker\\namespace.txt",
+      "applicationId": "com.pqsk0aapnbig.game",
+      "projectName": "Lucky 777 Lucky Master",
+      "gamePackagePath": "E:\\apkaes\\aesApk\\minigame",
+      "iconResPath": "E:\\wg\\cocos\\H5QuickMaker\\quickmaker-ui\\res"
+    },
+    "result": {
+      "destinationProjectPath": "E:\\wg\\cocos\\duZong\\Lucky 777 Lucky Master",
+      "namespace": "com.kxsoa.kisaxqsx",
+      "keystorePath": "E:\\wg\\cocos\\duZong\\Lucky 777 Lucky Master\\com.pqsk0aapnbig.game.jks",
+      "backupGamePackagePath": "E:\\wg\\cocos\\H5QuickMaker\\quickmaker-ui\\tempproject\\Lucky 777 Lucky Master\\mygame"
+    }
+  },
+  {
+    "createdAt": "2026-02-24T11:44:14.736Z",
+    "finishedAt": "2026-02-24T11:44:19.514Z",
+    "logs": [
+      "[2026-02-24T11:44:14.736Z] Validating inputs",
+      "[2026-02-24T11:44:14.737Z] Parameters: applicationId=com.s7ayc2ezi7ki.game",
+      "[2026-02-24T11:44:14.737Z] Parameters: projectName=Lucky 777 Bright Classic",
+      "[2026-02-24T11:44:14.737Z] Parameters: gamePackagePath=E:\\apkaes\\aesApk\\minigame",
+      "[2026-02-24T11:44:14.737Z] Parameters: iconResPath=E:\\wg\\cocos\\H5QuickMaker\\quickmaker-ui\\res",
+      "[2026-02-24T11:44:14.737Z] Reading namespace",
+      "[2026-02-24T11:44:14.738Z] Copying template project",
+      "[2026-02-24T11:44:17.534Z] Generating keystore",
+      "[2026-02-24T11:44:18.461Z] Updating build.gradle",
+      "[2026-02-24T11:44:18.466Z] Adjusting Java package path",
+      "[2026-02-24T11:44:18.466Z] Java package path unchanged, skip move",
+      "[2026-02-24T11:44:18.466Z] Rewriting namespace references",
+      "[2026-02-24T11:44:18.676Z] Updating project display names",
+      "[2026-02-24T11:44:18.696Z] Copying game package to project assets/mygame",
+      "[2026-02-24T11:44:19.138Z] Replacing icon resources under app/src/main/res",
+      "[2026-02-24T11:44:19.223Z] Icon resource merged from: E:\\wg\\cocos\\H5QuickMaker\\quickmaker-ui\\res",
+      "[2026-02-24T11:44:19.223Z] logo.png overwritten from: E:\\wg\\cocos\\H5QuickMaker\\quickmaker-ui\\res\\playstore-icon.png",
+      "[2026-02-24T11:44:19.223Z] Backing up game package under quickmaker-ui",
+      "[2026-02-24T11:44:19.514Z] Writing creation record"
+    ],
+    "payload": {
+      "templatePath": "E:\\wg\\cocos\\H5QuickMaker\\Lucky 777 Winner Go",
+      "outputRoot": "E:\\wg\\cocos\\duZong",
+      "namespaceFilePath": "E:\\wg\\cocos\\H5QuickMaker\\namespace.txt",
+      "applicationId": "com.s7ayc2ezi7ki.game",
+      "projectName": "Lucky 777 Bright Classic",
+      "gamePackagePath": "E:\\apkaes\\aesApk\\minigame",
+      "iconResPath": "E:\\wg\\cocos\\H5QuickMaker\\quickmaker-ui\\res"
+    },
+    "result": {
+      "destinationProjectPath": "E:\\wg\\cocos\\duZong\\Lucky 777 Bright Classic",
+      "namespace": "com.kxsoa.kisaxqsx",
+      "keystorePath": "E:\\wg\\cocos\\duZong\\Lucky 777 Bright Classic\\com.s7ayc2ezi7ki.game.jks",
+      "backupGamePackagePath": "E:\\wg\\cocos\\H5QuickMaker\\quickmaker-ui\\tempproject\\Lucky 777 Bright Classic\\mygame"
+    }
+  },
+  {
+    "createdAt": "2026-02-24T11:34:35.255Z",
+    "finishedAt": "2026-02-24T11:34:39.551Z",
+    "logs": [
+      "[2026-02-24T11:34:35.255Z] Validating inputs",
+      "[2026-02-24T11:34:35.255Z] Parameters: applicationId=com.ofso38u2el1i.game",
+      "[2026-02-24T11:34:35.255Z] Parameters: projectName=Lucky 777 Journey Bonus",
+      "[2026-02-24T11:34:35.255Z] Parameters: gamePackagePath=E:\\apkaes\\aesApk\\minigame",
+      "[2026-02-24T11:34:35.255Z] Parameters: iconResPath=E:\\wg\\cocos\\H5QuickMaker\\quickmaker-ui\\res",
+      "[2026-02-24T11:34:35.256Z] Reading namespace",
+      "[2026-02-24T11:34:35.256Z] Copying template project",
+      "[2026-02-24T11:34:37.823Z] Generating keystore",
+      "[2026-02-24T11:34:38.572Z] Updating build.gradle",
+      "[2026-02-24T11:34:38.575Z] Adjusting Java package path",
+      "[2026-02-24T11:34:38.582Z] Rewriting namespace references",
+      "[2026-02-24T11:34:38.829Z] Updating project display names",
+      "[2026-02-24T11:34:38.838Z] Copying game package to project assets/mygame",
+      "[2026-02-24T11:34:39.175Z] Replacing icon resources under app/src/main/res",
+      "[2026-02-24T11:34:39.246Z] Icon resource merged from: E:\\wg\\cocos\\H5QuickMaker\\quickmaker-ui\\res",
+      "[2026-02-24T11:34:39.246Z] logo.png overwritten from: E:\\wg\\cocos\\H5QuickMaker\\quickmaker-ui\\res\\playstore-icon.png",
+      "[2026-02-24T11:34:39.246Z] Backing up game package under quickmaker-ui",
+      "[2026-02-24T11:34:39.551Z] Writing creation record"
+    ],
+    "payload": {
+      "templatePath": "E:\\wg\\cocos\\H5QuickMaker\\Lucky 777 Winner Go",
+      "outputRoot": "E:\\wg\\cocos\\duZong",
+      "namespaceFilePath": "E:\\wg\\cocos\\H5QuickMaker\\namespace.txt",
+      "applicationId": "com.ofso38u2el1i.game",
+      "projectName": "Lucky 777 Journey Bonus",
+      "gamePackagePath": "E:\\apkaes\\aesApk\\minigame",
+      "iconResPath": "E:\\wg\\cocos\\H5QuickMaker\\quickmaker-ui\\res"
+    },
+    "result": {
+      "destinationProjectPath": "E:\\wg\\cocos\\duZong\\Lucky 777 Journey Bonus",
+      "namespace": "com.kxsoa.kisaxqsx",
+      "keystorePath": "E:\\wg\\cocos\\duZong\\Lucky 777 Journey Bonus\\com.ofso38u2el1i.game.jks",
+      "backupGamePackagePath": "E:\\wg\\cocos\\H5QuickMaker\\quickmaker-ui\\tempproject\\Lucky 777 Journey Bonus\\mygame"
+    }
+  }
+]
