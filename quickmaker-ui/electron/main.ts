@@ -1,4 +1,4 @@
-import { Notification, app, BrowserWindow, Menu, dialog, ipcMain, shell } from 'electron';
+﻿import { Notification, app, BrowserWindow, Menu, dialog, ipcMain, shell } from 'electron';
 import path from 'node:path';
 import { spawn, type ChildProcessWithoutNullStreams } from 'node:child_process';
 import { promises as fs } from 'node:fs';
@@ -26,6 +26,12 @@ import {
 
 let logcatProcess: ChildProcessWithoutNullStreams | null = null;
 const gotTheLock = app.requestSingleInstanceLock();
+const isDebugMode = process.argv.includes('--debug');
+
+if (isDebugMode) {
+  app.commandLine.appendSwitch('enable-logging');
+  app.commandLine.appendSwitch('v', '1');
+}
 
 async function runAdbOnce(args: string[]): Promise<void> {
   await new Promise<void>((resolve, reject) => {
@@ -59,6 +65,21 @@ function createMainWindow(): void {
   } else {
     win.loadFile(path.join(__dirname, '..', 'dist', 'index.html'));
   }
+
+  if (isDebugMode) {
+    win.webContents.openDevTools({ mode: 'detach' });
+  }
+
+  win.webContents.on('did-fail-load', (_event, errorCode, errorDescription, validatedURL) => {
+    console.error('[did-fail-load]', errorCode, errorDescription, validatedURL);
+  });
+  win.webContents.on('render-process-gone', (_event, details) => {
+    console.error('[render-process-gone]', details.reason, details.exitCode);
+  });
+  win.webContents.on('console-message', (_event, level, message, line, sourceId) => {
+    if (!isDebugMode) return;
+    console.log(`[renderer:${level}] ${sourceId}:${line} ${message}`);
+  });
 }
 
 ipcMain.handle('pick-directory', async () => {
@@ -72,6 +93,16 @@ ipcMain.handle('pick-directory', async () => {
   }
 
   return result.filePaths[0];
+});
+
+ipcMain.handle('path-exists', async (_event, targetPath: string) => {
+  if (!targetPath || !targetPath.trim()) return false;
+  try {
+    await fs.access(targetPath.trim());
+    return true;
+  } catch {
+    return false;
+  }
 });
 
 ipcMain.handle('create-project', async (_event, payload: CreateProjectPayload) => {
@@ -264,6 +295,14 @@ app.on('second-instance', () => {
   win.focus();
 });
 
+process.on('uncaughtException', (err) => {
+  console.error('[uncaughtException]', err);
+});
+
+process.on('unhandledRejection', (reason) => {
+  console.error('[unhandledRejection]', reason);
+});
+
 app.on('window-all-closed', () => {
   if (logcatProcess) {
     logcatProcess.kill();
@@ -273,3 +312,4 @@ app.on('window-all-closed', () => {
     app.quit();
   }
 });
+

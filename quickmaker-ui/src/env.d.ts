@@ -67,6 +67,7 @@ declare global {
   interface Window {
     quickMaker: {
       pickDirectory: () => Promise<string | null>;
+      pathExists: (targetPath: string) => Promise<boolean>;
       createProject: (payload: CreateProjectPayload) => Promise<CreateProjectResult>;
       checkProjectName: (outputRoot: string, projectName: string) => Promise<boolean>;
       loadProjectRecords: () => Promise<string>;

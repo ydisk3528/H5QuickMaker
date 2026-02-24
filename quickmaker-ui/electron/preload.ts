@@ -15,6 +15,7 @@ type SyncPasswordResult = { stringFogPath: string };
 
 const api = {
   pickDirectory: () => ipcRenderer.invoke('pick-directory') as Promise<string | null>,
+  pathExists: (targetPath: string) => ipcRenderer.invoke('path-exists', targetPath) as Promise<boolean>,
   createProject: (payload: CreateProjectPayload) => ipcRenderer.invoke('create-project-with-progress', payload) as Promise<CreateProjectResult>,
   checkProjectName: (outputRoot: string, projectName: string) =>
     ipcRenderer.invoke('check-project-name', outputRoot, projectName) as Promise<boolean>,

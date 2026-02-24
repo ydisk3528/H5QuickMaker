@@ -42,27 +42,36 @@ function randomApplicationId(): string {
 }
 
 const words = [
-  "Winner",
   "Fortune",
-  "Glory",
+  "Jackpot",
   "Treasure",
-  "Journey",
-  "Bonus",
-  "Master",
-  "Dream",
-  "Golden",
-  "Royal",
-  "Happy",
-  "King",
-  "Legend",
-  "Spark",
-  "Star",
-  "Hero",
-  "Magic",
-  "Joy",
-  "Prime",
-  "Puzzle",
-  "Crazy",
+  "Crown",
+  "Dynasty",
+  "Empire",
+  "Kingdom",
+  "Diamond",
+  "Ruby",
+  "Emerald",
+  "Phoenix",
+  "Dragon",
+  "Tiger",
+  "Temple",
+  "Palace",
+  "Odyssey",
+  "Destiny",
+  "Mystic",
+  "Goldmine",
+  "Vault",
+  "Thunder",
+  "Blizzard",
+  "Inferno",
+  "Oasis",
+  "Mirage",
+  "Carnival",
+  "Liberty",
+  "Paradise",
+  "Eclipse",
+  "Horizon",
 ];
 
 function randomProjectName(existing: Set<string>): string {
@@ -470,14 +479,18 @@ function isEventKeyField(key: string): boolean {
 }
 
 function normalizeOrientationValue(value: string): string {
-  const v = String(value ?? "").trim().toLowerCase();
+  const v = String(value ?? "")
+    .trim()
+    .toLowerCase();
   if (v === "1" || v === "横屏" || v === "landscape") return "1";
   if (v === "0" || v === "竖屏" || v === "portrait") return "0";
   return "0";
 }
 
 function normalizeBinary01Value(value: string): string {
-  const v = String(value ?? "").trim().toLowerCase();
+  const v = String(value ?? "")
+    .trim()
+    .toLowerCase();
   if (v === "1" || v === "true" || v === "yes" || v === "on") return "1";
   if (v === "0" || v === "false" || v === "no" || v === "off") return "0";
   return "0";
@@ -502,7 +515,10 @@ function initBackendDefaults(): void {
     "link",
     "https://www.earnphp1o.vip/m/index.html?affiliateCode=vip339"
   );
-  setBackendValue("orientation", normalizeOrientationValue(getBackendValue("orientation")));
+  setBackendValue(
+    "orientation",
+    normalizeOrientationValue(getBackendValue("orientation"))
+  );
   backendFields.value.forEach((item) => {
     if (isBinaryFlagField(item.key)) {
       item.value = normalizeBinary01Value(item.value);
@@ -815,6 +831,20 @@ async function loadBackendConfig(): Promise<void> {
   }
 }
 
+async function ensureTemplatePathOnLaunch(): Promise<void> {
+  if (!ensureApi()) return;
+  const target = form.templatePath.trim();
+  if (!target) return;
+  try {
+    const ok = await window.quickMaker.pathExists(target);
+    if (ok) return;
+    notifyError("模板目录不存在", `${target}\n请重新选择模板目录`);
+    await pickPath("templatePath");
+  } catch (e) {
+    notifyError("模板目录检查失败", e instanceof Error ? e.message : String(e));
+  }
+}
+
 function applyBackendPackageToMain(): void {
   const pkg = getBackendValue(packageNameKey()).trim();
   if (!pkg) return;
@@ -845,16 +875,19 @@ function copyBackendConfig(): void {
   syncAdjParamsConfig();
   const obj: Record<string, unknown> = Object.fromEntries(
     backendFields.value
-      .map((x) => [
-        x.key,
-        parseCopyJsonValue(
-          isOrientationField(x.key)
-            ? normalizeOrientationValue(x.value)
-            : isBinaryFlagField(x.key)
-            ? normalizeBinary01Value(x.value)
-            : x.value
-        ),
-      ] as const)
+      .map(
+        (x) =>
+          [
+            x.key,
+            parseCopyJsonValue(
+              isOrientationField(x.key)
+                ? normalizeOrientationValue(x.value)
+                : isBinaryFlagField(x.key)
+                ? normalizeBinary01Value(x.value)
+                : x.value
+            ),
+          ] as const
+      )
       .filter(
         ([k]) =>
           !/^remark$/i.test(k) &&
@@ -890,16 +923,19 @@ function copyBackendConfigMinified(): void {
   syncAdjParamsConfig();
   const obj: Record<string, unknown> = Object.fromEntries(
     backendFields.value
-      .map((x) => [
-        x.key,
-        parseCopyJsonValue(
-          isOrientationField(x.key)
-            ? normalizeOrientationValue(x.value)
-            : isBinaryFlagField(x.key)
-            ? normalizeBinary01Value(x.value)
-            : x.value
-        ),
-      ] as const)
+      .map(
+        (x) =>
+          [
+            x.key,
+            parseCopyJsonValue(
+              isOrientationField(x.key)
+                ? normalizeOrientationValue(x.value)
+                : isBinaryFlagField(x.key)
+                ? normalizeBinary01Value(x.value)
+                : x.value
+            ),
+          ] as const
+      )
       .filter(
         ([k]) =>
           !/^remark$/i.test(k) &&
@@ -954,7 +990,12 @@ async function submit(): Promise<void> {
   addMajorLog(`[${new Date().toISOString()}] 开始创建工程`);
   addMajorLog(`applicationId=${form.applicationId}`);
   addMajorLog(`projectName=${form.projectName}`);
-  pushChange("操作", "创建工程", "", `${form.projectName} (${form.applicationId})`);
+  pushChange(
+    "操作",
+    "创建工程",
+    "",
+    `${form.projectName} (${form.applicationId})`
+  );
   notifyInfo("开始创建工程", form.projectName || "未命名工程");
 
   try {
@@ -1034,8 +1075,16 @@ async function buildArtifact(kind: "apk" | "aab"): Promise<void> {
     addMajorLog(
       `[${new Date().toISOString()}] 编译 ${kind.toUpperCase()} 完成`
     );
-    notifySuccess(`编译${kind.toUpperCase()}完成`, form.projectName || "当前工程");
-    pushChange("操作", "编译任务", `开始 ${kind.toUpperCase()}`, `完成 ${kind.toUpperCase()}`);
+    notifySuccess(
+      `编译${kind.toUpperCase()}完成`,
+      form.projectName || "当前工程"
+    );
+    pushChange(
+      "操作",
+      "编译任务",
+      `开始 ${kind.toUpperCase()}`,
+      `完成 ${kind.toUpperCase()}`
+    );
     message.value = `${kind.toUpperCase()} 编译完成:\n${result.artifactPath}`;
   } catch (e) {
     error.value = e instanceof Error ? e.message : String(e);
@@ -1045,7 +1094,12 @@ async function buildArtifact(kind: "apk" | "aab"): Promise<void> {
       }`
     );
     notifyError(`编译${kind.toUpperCase()}失败`, error.value);
-    pushChange("操作", "编译任务", `开始 ${kind.toUpperCase()}`, `失败 ${kind.toUpperCase()}: ${error.value}`);
+    pushChange(
+      "操作",
+      "编译任务",
+      `开始 ${kind.toUpperCase()}`,
+      `失败 ${kind.toUpperCase()}: ${error.value}`
+    );
   } finally {
     buildBusy.value = false;
   }
@@ -1227,6 +1281,7 @@ onMounted(() => {
   }
 
   if (!form.projectName) refreshProjectName();
+  ensureTemplatePathOnLaunch().catch(() => null);
   changeTrackingEnabled.value = true;
 });
 
@@ -1616,8 +1671,12 @@ onBeforeUnmount(() => {
                 <div class="change-head">
                   [{{ item.at }}] [{{ item.category }}] {{ item.field }}
                 </div>
-                <div class="change-body">旧值: {{ item.before || "（空）" }}</div>
-                <div class="change-body">新值: {{ item.after || "（空）" }}</div>
+                <div class="change-body">
+                  旧值: {{ item.before || "（空）" }}
+                </div>
+                <div class="change-body">
+                  新值: {{ item.after || "（空）" }}
+                </div>
               </div>
               <div v-if="filteredChangeLogs.length === 0" class="record-status">
                 暂无记录

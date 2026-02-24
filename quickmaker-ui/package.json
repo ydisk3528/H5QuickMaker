@@ -11,7 +11,8 @@
     "build": "npm run build:web && npm run build:electron",
     "build:web": "vite build",
     "build:electron": "tsc -p electron/tsconfig.json",
-    "dist:win": "npm run build && electron-builder --win nsis portable --x64"
+    "dist:win": "npm run build && electron-builder --win nsis portable --x64",
+    "dist:debug": "npm run build && electron-builder --win dir --x64 && node scripts/create-debug-launcher.cjs"
   },
   "dependencies": {
     "element-plus": "^2.13.2",
@@ -38,9 +39,12 @@
     "files": [
       "dist/**",
       "dist-electron/**",
+      "loadtype.txt",
+      "StringFogManager.cpp",
       "package.json"
     ],
     "win": {
+      "signAndEditExecutable": false,
       "target": [
         {
           "target": "nsis",
