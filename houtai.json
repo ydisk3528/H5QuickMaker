@@ -1,8 +1,8 @@
 {
     "imgs": "yJtoYLNYMIuuaIpe",
     "inwebview": 1,
-    "adsLan": "cn",
-    "adsCountry": "cn",
+    "adsLan": "zh",
+    "adsCountry": "cn,chn",
     "adsRan": 0,
     "log": 0,
     "copyTxt": 0,
@@ -19,7 +19,7 @@
     "event_key": "6jukvs7m6lfk",
     "open": "",
     "more": "-1",
-    "orientation": "",
+    "orientation": "0",
     "fb_id": "",
     "fb_token": "",
     "adjParams": {

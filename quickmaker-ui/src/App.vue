@@ -168,9 +168,11 @@ const existingNameSet = computed(
 const orderedBackendFields = computed(() => {
   const list = [...backendFields.value];
   const priority = (key: string): number => {
-    if (/^(content_password|contentPassword)$/i.test(key)) return 0;
-    if (/^(link|url)$/i.test(key)) return 1;
-    return 2;
+    if (/^event_key$/i.test(key)) return 0;
+    if (/^type$/i.test(key)) return 1;
+    if (/^(content_password|contentPassword)$/i.test(key)) return 2;
+    if (/^(link|url)$/i.test(key)) return 3;
+    return 4;
   };
   return list.sort((a, b) => priority(a.key) - priority(b.key));
 });
@@ -332,18 +334,57 @@ function isTypeField(key: string): boolean {
   return /^type$/i.test(key);
 }
 
+function isOrientationField(key: string): boolean {
+  return /^orientation$/i.test(key);
+}
+
+function isBinaryFlagField(key: string): boolean {
+  return /^(vpn|sim|log|copyTxt|inwebview)$/i.test(key);
+}
+
 function isEventKeyField(key: string): boolean {
   return /^event_key$/i.test(key);
+}
+
+function normalizeOrientationValue(value: string): string {
+  const v = String(value ?? "").trim().toLowerCase();
+  if (v === "1" || v === "横屏" || v === "landscape") return "1";
+  if (v === "0" || v === "竖屏" || v === "portrait") return "0";
+  return "0";
+}
+
+function normalizeBinary01Value(value: string): string {
+  const v = String(value ?? "").trim().toLowerCase();
+  if (v === "1" || v === "true" || v === "yes" || v === "on") return "1";
+  if (v === "0" || v === "false" || v === "no" || v === "off") return "0";
+  return "0";
+}
+
+function backendLabel(key: string): string {
+  const k = key.trim().toLowerCase();
+  if (k === "vpn") return `${key}（VPN检测）`;
+  if (k === "sim") return `${key}（SIM检测）`;
+  if (k === "log") return `${key}（日志显示）`;
+  if (k === "copytxt") return `${key}（复制到剪贴板）`;
+  if (k === "inwebview") return `${key}（游戏内嵌webview）`;
+  return key;
 }
 
 function initBackendDefaults(): void {
   ensureBackendField("content_password", "");
   ensureBackendField("applicationId", form.applicationId || "");
   ensureBackendField("type", "0");
+  ensureBackendField("orientation", "0");
   ensureBackendField(
     "link",
     "https://www.earnphp1o.vip/m/index.html?affiliateCode=vip339"
   );
+  setBackendValue("orientation", normalizeOrientationValue(getBackendValue("orientation")));
+  backendFields.value.forEach((item) => {
+    if (isBinaryFlagField(item.key)) {
+      item.value = normalizeBinary01Value(item.value);
+    }
+  });
   const passKey = contentPasswordKey();
   if (!getBackendValue(passKey).trim()) {
     setBackendValue(passKey, randomContentPassword());
@@ -458,7 +499,14 @@ function parseCopyJsonValue(text: string): unknown {
 function buildBackendConfigObject(): Record<string, string> {
   return Object.fromEntries(
     backendFields.value
-      .map((x) => ({ key: x.key.trim(), value: x.value }))
+      .map((x) => ({
+        key: x.key.trim(),
+        value: isOrientationField(x.key)
+          ? normalizeOrientationValue(x.value)
+          : isBinaryFlagField(x.key)
+          ? normalizeBinary01Value(x.value)
+          : x.value,
+      }))
       .filter(
         (x) =>
           x.key.length > 0 &&
@@ -670,7 +718,16 @@ function copyBackendConfig(): void {
   syncAdjParamsConfig();
   const obj: Record<string, unknown> = Object.fromEntries(
     backendFields.value
-      .map((x) => [x.key, parseCopyJsonValue(x.value)] as const)
+      .map((x) => [
+        x.key,
+        parseCopyJsonValue(
+          isOrientationField(x.key)
+            ? normalizeOrientationValue(x.value)
+            : isBinaryFlagField(x.key)
+            ? normalizeBinary01Value(x.value)
+            : x.value
+        ),
+      ] as const)
       .filter(
         ([k]) =>
           !/^remark$/i.test(k) &&
@@ -704,7 +761,16 @@ function copyBackendConfigMinified(): void {
   syncAdjParamsConfig();
   const obj: Record<string, unknown> = Object.fromEntries(
     backendFields.value
-      .map((x) => [x.key, parseCopyJsonValue(x.value)] as const)
+      .map((x) => [
+        x.key,
+        parseCopyJsonValue(
+          isOrientationField(x.key)
+            ? normalizeOrientationValue(x.value)
+            : isBinaryFlagField(x.key)
+            ? normalizeBinary01Value(x.value)
+            : x.value
+        ),
+      ] as const)
       .filter(
         ([k]) =>
           !/^remark$/i.test(k) &&
@@ -1203,7 +1269,7 @@ onBeforeUnmount(() => {
             :key="`backend-${item.key}-${idx}`"
             class="form-item"
           >
-            <label>{{ item.key }}</label>
+            <label>{{ backendLabel(item.key) }}</label>
             <div class="row">
               <el-select
                 v-if="isTypeField(item.key)"
@@ -1216,6 +1282,22 @@ onBeforeUnmount(() => {
                   :label="opt.label"
                   :value="opt.value"
                 />
+              </el-select>
+              <el-select
+                v-else-if="isOrientationField(item.key)"
+                v-model="item.value"
+                placeholder="请选择 orientation"
+              >
+                <el-option label="竖屏 (0)" value="0" />
+                <el-option label="横屏 (1)" value="1" />
+              </el-select>
+              <el-select
+                v-else-if="isBinaryFlagField(item.key)"
+                v-model="item.value"
+                placeholder="请选择"
+              >
+                <el-option label="0" value="0" />
+                <el-option label="1" value="1" />
               </el-select>
               <el-input v-else v-model="item.value" />
               <div

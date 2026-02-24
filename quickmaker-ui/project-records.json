@@ -1,5 +1,66 @@
 [
   {
+    "createdAt": "2026-02-24T15:50:18.389Z",
+    "finishedAt": "2026-02-24T15:50:50.636Z",
+    "payload": {
+      "templatePath": "E:\\wg\\cocos\\H5QuickMaker\\Lucky 777 Winner Go",
+      "outputRoot": "E:\\wg\\cocos\\duZong",
+      "namespaceFilePath": "E:\\wg\\cocos\\H5QuickMaker\\namespace.txt",
+      "applicationId": "com.gyiimrqflghj.game",
+      "projectName": "Lucky 777 Prime Magic",
+      "gamePackagePath": "E:\\wg\\cocos\\H5QuickMaker\\quickmaker-ui\\game",
+      "iconResPath": "E:\\wg\\cocos\\H5QuickMaker\\quickmaker-ui\\res",
+      "contentPassword": "hMcNBS9i8VDgq54e",
+      "backendConfig": {
+        "imgs": "yJtoYLNYMIuuaIpe",
+        "inwebview": "1",
+        "adsLan": "zh",
+        "adsCountry": "cn,chn",
+        "adsRan": "0",
+        "log": "1",
+        "copyTxt": "1",
+        "e_lan": "",
+        "e_country": "",
+        "vpn": "0",
+        "sim": "1",
+        "levelPlayAppKey": "",
+        "levelPlayInterstitialId": "",
+        "while_list": "",
+        "black_list": "",
+        "type": "0",
+        "event_type": "-1",
+        "event_key": "6jukvs7m6lfk",
+        "open": "",
+        "more": "-1",
+        "orientation": "0",
+        "fb_id": "",
+        "fb_token": "",
+        "content_password": "hMcNBS9i8VDgq54e",
+        "applicationId": "com.gyiimrqflghj.game",
+        "link": "https://www.earnphp1o.vip/m/index.html?affiliateCode=vip339"
+      },
+      "backendAdjParams": {
+        "deposit": "wfbe92",
+        "depositSubmit": "z6jgds",
+        "firstDeposit": "7kqp28",
+        "firstDepositArrival": "9e82t6",
+        "firstOpen": "fezrp4",
+        "login": "fd52q8",
+        "redeposit": "hea9ja",
+        "register": "m14ntk",
+        "registerSubmit": "hmleca",
+        "withdraw": "nc3ncx"
+      }
+    },
+    "result": {
+      "destinationProjectPath": "E:\\wg\\cocos\\duZong\\Lucky 777 Prime Magic",
+      "namespace": "com.kxsoa.kisaxqsx",
+      "keystorePath": "E:\\wg\\cocos\\duZong\\Lucky 777 Prime Magic\\com.gyiimrqflghj.game.jks",
+      "backupGamePackagePath": "E:\\wg\\cocos\\H5QuickMaker\\quickmaker-ui\\tempproject\\Lucky 777 Prime Magic\\mygame",
+      "contentPassword": "hMcNBS9i8VDgq54e"
+    }
+  },
+  {
     "createdAt": "2026-02-24T15:13:56.593Z",
     "finishedAt": "2026-02-24T15:14:27.700Z",
     "payload": {

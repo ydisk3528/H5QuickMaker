@@ -24,6 +24,7 @@ import {
 } from './project-maker.js';
 
 let logcatProcess: ChildProcessWithoutNullStreams | null = null;
+const gotTheLock = app.requestSingleInstanceLock();
 
 async function runAdbOnce(args: string[]): Promise<void> {
   await new Promise<void>((resolve, reject) => {
@@ -201,6 +202,11 @@ ipcMain.handle('stop-logcat', async () => {
 });
 
 app.whenReady().then(() => {
+  if (!gotTheLock) {
+    app.quit();
+    return;
+  }
+
   app.setAppUserModelId('com.h5quickmaker.app');
   Menu.setApplicationMenu(null);
   createMainWindow();
@@ -210,6 +216,19 @@ app.whenReady().then(() => {
       createMainWindow();
     }
   });
+});
+
+app.on('second-instance', () => {
+  const windows = BrowserWindow.getAllWindows();
+  if (windows.length === 0) {
+    createMainWindow();
+    return;
+  }
+  const win = windows[0];
+  if (win.isMinimized()) {
+    win.restore();
+  }
+  win.focus();
 });
 
 app.on('window-all-closed', () => {
